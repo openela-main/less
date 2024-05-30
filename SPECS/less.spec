@@ -1,7 +1,7 @@
 Summary: A text file browser similar to more, but better
 Name: less
 Version: 590
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv3+ or BSD
 Source0: https://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
@@ -17,6 +17,7 @@ Patch10: less-458-lesskey-usage.patch
 Patch11: less-458-old-bot-in-help.patch
 Patch12: less-590-CVE-2022-46663.patch
 Patch13: less-590-CVE-2022-48624.patch
+Patch14: less-590-CVE-2024-32487.patch
 URL: https://www.greenwoodsoftware.com/less/
 BuildRequires: ncurses-devel
 BuildRequires: autoconf automake libtool
@@ -44,6 +45,7 @@ files, and you'll use it frequently.
 %patch11 -p1 -b .old-bot
 %patch12 -p1 -b .CVE-2022-46663
 %patch13 -p1 -b .CVE-2022-48624
+%patch14 -p1 -b .CVE-2024-32487
 
 
 %build
@@ -67,6 +69,10 @@ install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT/etc/profile.d
 %{_mandir}/man1/*
 
 %changelog
+* Tue Apr 23 2024 Matej Mužila <mmuzila@redhat.com> - 590-4
+- Fix CVE-2024-32487
+- Resolves: RHEL-33773
+
 * Wed Feb 21 2024 Matej Mužila <mmuzila@redhat.com> 590-3
 - Fix CVE-2022-48624
 - Resolves: RHEL-26265
