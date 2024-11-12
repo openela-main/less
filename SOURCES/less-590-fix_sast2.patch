@@ -1,0 +1,53 @@
+diff -up less-590/lesskey_parse.c.fix_sast2 less-590/lesskey_parse.c
+--- less-590/lesskey_parse.c.fix_sast2	2024-08-06 23:42:33.839079731 +0200
++++ less-590/lesskey_parse.c	2024-08-06 23:47:17.433874330 +0200
+@@ -548,9 +548,9 @@ parse_lesskey(infile, tables)
+ 	FILE *desc;
+ 	char line[1024];
+ 
+-	if (infile == NULL)
+-		infile = homefile(DEF_LESSKEYINFILE);
+-	lesskey_file = infile;
++	lesskey_file = (infile != NULL) ? strdup(infile) : homefile(DEF_LESSKEYINFILE);
++	if (lesskey_file == NULL)
++		return (-1);
+ 
+ 	init_tables(tables);
+ 	errors = 0;
+@@ -559,22 +559,29 @@ parse_lesskey(infile, tables)
+ 	/*
+ 	 * Open the input file.
+ 	 */
+-	if (strcmp(infile, "-") == 0)
++	if (strcmp(lesskey_file, "-") == 0)
+ 		desc = stdin;
+-	else if ((desc = fopen(infile, "r")) == NULL)
++	else if ((desc = fopen(lesskey_file, "r")) == NULL)
+ 	{
+-		/* parse_error("cannot open lesskey file ", infile); */
+-		return (-1);
++		/* parse_error("cannot open lesskey file %s", lesskey_file); */
++		errors = -1;
+ 	}
+ 
+ 	/*
+ 	 * Read and parse the input file, one line at a time.
+ 	 */
+-	while (fgets(line, sizeof(line), desc) != NULL)
++	if (desc != NULL)
+ 	{
+-		++linenum;
+-		parse_line(line, tables);
++		while (fgets(line, sizeof(line), desc) != NULL)
++		{
++			++linenum;
++			parse_line(line, tables);
++		}
++		if (desc != stdin)
++			fclose(desc);
+ 	}
++	free(lesskey_file);
++	lesskey_file = NULL;
+ 
+ 	return (errors);
+ }

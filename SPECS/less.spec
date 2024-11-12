@@ -1,7 +1,7 @@
 Summary: A text file browser similar to more, but better
 Name: less
 Version: 590
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv3+ or BSD
 Source0: https://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
@@ -17,7 +17,16 @@ Patch10: less-458-lesskey-usage.patch
 Patch11: less-458-old-bot-in-help.patch
 Patch12: less-590-CVE-2022-46663.patch
 Patch13: less-590-CVE-2022-48624.patch
+# from upstream, for less < 661 , RHEL-32739
 Patch14: less-590-CVE-2024-32487.patch
+
+# from upstream, for less < 661, RHEL-51178
+# based on https://github.com/gwsw/less/commit/2a79e5cd341f9c8437a71096c23c8fe8e94b7d0a
+# based on https://github.com/gwsw/less/commit/987ebdc424c4865bf883eb0b11aea2b261b353f2
+Patch15: less-590-fix_sast1.patch
+
+# from upstream, for less < 661, based on commit#1649cc355a9eb824837feb4359828f5627e2eb69, RHEL-51178
+Patch16: less-590-fix_sast2.patch
 URL: https://www.greenwoodsoftware.com/less/
 BuildRequires: ncurses-devel
 BuildRequires: autoconf automake libtool
@@ -35,17 +44,19 @@ files, and you'll use it frequently.
 
 %prep
 %setup -q
-%patch4 -p1 -b .time
-%patch5 -p1 -b .fsync
-%patch6 -p1 -b .manpage-add-old-bot-option
-%patch7 -p1 -b .help
-%patch8 -p1 -b .lessecho-usage
-%patch9 -p1 -b .less-filters-man
-%patch10 -p1 -b .lesskey-usage
-%patch11 -p1 -b .old-bot
-%patch12 -p1 -b .CVE-2022-46663
-%patch13 -p1 -b .CVE-2022-48624
-%patch14 -p1 -b .CVE-2024-32487
+%patch -P 4 -p1 -b .time
+%patch -P 5 -p1 -b .fsync
+%patch -P 6 -p1 -b .manpage-add-old-bot-option
+%patch -P 7 -p1 -b .help
+%patch -P 8 -p1 -b .lessecho-usage
+%patch -P 9 -p1 -b .less-filters-man
+%patch -P 10 -p1 -b .lesskey-usage
+%patch -P 11 -p1 -b .old-bot
+%patch -P 12 -p1 -b .CVE-2022-46663
+%patch -P 13 -p1 -b .CVE-2022-48624
+%patch -P 14 -p1 -b .CVE-2024-32487
+%patch -P 15 -p1 -b .fix_sast1
+%patch -P 16 -p1 -b .fix_sast2
 
 
 %build
@@ -69,9 +80,11 @@ install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT/etc/profile.d
 %{_mandir}/man1/*
 
 %changelog
-* Tue Apr 23 2024 Matej Mužila <mmuzila@redhat.com> - 590-4
-- Fix CVE-2024-32487
-- Resolves: RHEL-33773
+* Tue Aug 06 2024 Michal Hlavinka <mhlavink@redhat.com> - 590-5
+- fix static analysis findings (RHEL-51178)
+
+* Tue Aug 06 2024 Michal Hlavinka <mhlavink@redhat.com> - 590-4
+- fix less with LESSOPEN allowing command injection (CVE-2024-32487) (RHEL-32739)
 
 * Wed Feb 21 2024 Matej Mužila <mmuzila@redhat.com> 590-3
 - Fix CVE-2022-48624

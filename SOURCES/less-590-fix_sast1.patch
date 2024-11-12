@@ -1,0 +1,26 @@
+diff -up less-590/command.c.fix_sast1 less-590/command.c
+--- less-590/command.c.fix_sast1	2021-06-03 19:45:48.000000000 +0200
++++ less-590/command.c	2024-08-06 23:28:58.042048590 +0200
+@@ -927,8 +927,8 @@ getcc_repl(orig, repl, gr_getc, gr_unget
+ 	LWCHAR (*gr_getc)(VOID_PARAM);
+ 	void (*gr_ungetc)(LWCHAR);
+ {
+-	LWCHAR c;
+-	LWCHAR keys[16];
++	char c;
++	char keys[16];
+ 	int ki = 0;
+ 
+ 	c = (*gr_getc)();
+diff -up less-590/decode.c.fix_sast1 less-590/decode.c
+--- less-590/decode.c.fix_sast1	2024-08-06 23:28:58.041048580 +0200
++++ less-590/decode.c	2024-08-06 23:29:55.715615701 +0200
+@@ -934,7 +934,7 @@ add_hometable(call_lesskey, envname, def
+ 	char *def_filename;
+ 	int sysvar;
+ {
+-	char *filename;
++	char *filename = NULL;
+ 	int r;
+ 
+ 	if (envname != NULL && (filename = lgetenv(envname)) != NULL)
