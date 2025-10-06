@@ -1,0 +1,20 @@
+diff -up less-661/os.c.pipefix less-661/os.c
+--- less-661/os.c.pipefix	2024-06-29 19:16:08.000000000 +0200
++++ less-661/os.c	2024-08-10 08:06:14.762224766 +0200
+@@ -80,6 +80,7 @@ extern int exit_F_on_close;
+ extern int follow_mode;
+ extern int scanning_eof;
+ extern char intr_char;
++extern int is_tty;
+ #if !MSDOS_COMPILER
+ extern int tty;
+ #endif
+@@ -237,7 +238,7 @@ start:
+ 	}
+ #endif
+ #if USE_POLL
+-	if (fd != tty && use_poll)
++	if (is_tty && fd != tty && use_poll)
+ 	{
+ 		int ret = check_poll(fd, tty);
+ 		if (ret != 0)

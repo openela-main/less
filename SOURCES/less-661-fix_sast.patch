@@ -1,0 +1,12 @@
+diff -up less-661/input.c.fix_sast less-661/input.c
+--- less-661/input.c.fix_sast	2024-08-05 21:48:33.202257453 +0200
++++ less-661/input.c	2024-08-05 21:49:36.717911621 +0200
+@@ -345,7 +345,7 @@ public POSITION back_line(POSITION curr_
+ {
+ 	POSITION base_pos;
+ 	POSITION new_pos;
+-	POSITION edisp_pos;
++	POSITION edisp_pos = NULL_POSITION;
+ 	POSITION begin_new_pos;
+ 	int c;
+ 	lbool endline;
