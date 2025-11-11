@@ -1,7 +1,7 @@
 Summary: A text file browser similar to more, but better
 Name: less
 Version: 590
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv3+ or BSD
 Source0: https://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
@@ -27,6 +27,10 @@ Patch15: less-590-fix_sast1.patch
 
 # from upstream, for less < 661, based on commit#1649cc355a9eb824837feb4359828f5627e2eb69, RHEL-51178
 Patch16: less-590-fix_sast2.patch
+
+#from upstream, https://github.com/gwsw/less/commit/d21820c9d8501b5814d33d4fb8a621c6c563e102, RHEL-31219
+Patch17: less-590-fixhyperlink.patch
+
 URL: https://www.greenwoodsoftware.com/less/
 BuildRequires: ncurses-devel
 BuildRequires: autoconf automake libtool
@@ -57,6 +61,7 @@ files, and you'll use it frequently.
 %patch -P 14 -p1 -b .CVE-2024-32487
 %patch -P 15 -p1 -b .fix_sast1
 %patch -P 16 -p1 -b .fix_sast2
+%patch -P 17 -p2 -b .fixhyperlink
 
 
 %build
@@ -80,6 +85,9 @@ install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT/etc/profile.d
 %{_mandir}/man1/*
 
 %changelog
+* Wed Jul 02 2025 Michal Hlavinka <mhlavink@redhat.com> - 590-6
+- fix hyperlink underline continuing on next line (RHEL-31219)
+
 * Tue Aug 06 2024 Michal Hlavinka <mhlavink@redhat.com> - 590-5
 - fix static analysis findings (RHEL-51178)
 
